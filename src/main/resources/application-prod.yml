@@ -1,0 +1,80 @@
+spring:
+  application:
+    name: finance-dashboard
+  
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/finance_db}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+        jdbc:
+          batch_size: 20
+          fetch_size: 50
+        cache:
+          use_second_level_cache: true
+          region:
+            factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
+    show-sql: false
+  
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yml
+    enabled: true
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+  compression:
+    enabled: true
+    min-response-size: 1024
+
+logging:
+  level:
+    root: WARN
+    com.finance: INFO
+    org.springframework.security: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n"
+  file:
+    name: logs/finance-dashboard.log
+    max-size: 10MB
+    max-history: 10
+
+jwt:
+  secret: ${JWT_SECRET:your-super-secret-key-change-this-in-production-at-least-256-bits-minimum-32-chars-required}
+  expiration: ${JWT_EXPIRATION:86400000}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: ${SWAGGER_ENABLED:false}
+  api-docs:
+    path: /v3/api-docs
+    enabled: ${SWAGGER_ENABLED:false}

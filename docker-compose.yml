@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: finance_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: finance_db
+      POSTGRES_INITDB_ARGS: "-c max_connections=200"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - finance_network
+
+  finance-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: finance_api
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/finance_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      JWT_SECRET: your-super-secret-key-change-this-in-production-at-least-256-bits
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - finance_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  finance_network:
+    driver: bridge

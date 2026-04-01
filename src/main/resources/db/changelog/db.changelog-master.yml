@@ -1,0 +1,152 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1-create-users-table
+      author: finance-team
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: varchar(50)
+                  defaultValue: VIEWER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(50)
+                  defaultValue: ACTIVE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: idx_users_email
+            tableName: users
+            columns:
+              - column:
+                  name: email
+
+  - changeSet:
+      id: 2-create-financial-records-table
+      author: finance-team
+      changes:
+        - createTable:
+            tableName: financial_records
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: amount
+                  type: numeric(19,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: transaction_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: created_by
+                  type: integer
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_financial_records_user
+                    references: users(id)
+              - column:
+                  name: is_deleted
+                  type: boolean
+                  defaultValue: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+        - createIndex:
+            indexName: idx_financial_records_created_by
+            tableName: financial_records
+            columns:
+              - column:
+                  name: created_by
+        - createIndex:
+            indexName: idx_financial_records_transaction_date
+            tableName: financial_records
+            columns:
+              - column:
+                  name: transaction_date
+        - createIndex:
+            indexName: idx_financial_records_type
+            tableName: financial_records
+            columns:
+              - column:
+                  name: type
+        - createIndex:
+            indexName: idx_financial_records_category
+            tableName: financial_records
+            columns:
+              - column:
+                  name: category
+        - createIndex:
+            indexName: idx_financial_records_is_deleted
+            tableName: financial_records
+            columns:
+              - column:
+                  name: is_deleted

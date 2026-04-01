@@ -1,0 +1,70 @@
+# Gradle
+.gradle
+build/
+!gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+pom.xml.bak
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+
+# Environment
+.env
+.env.local
+application-dev.yml
+application-local.yml
+
+# Logs
+logs/
+*.log
+
+# Runtime
+*.jar
+*.war
+*.ear
+
+# Build artifacts
+out/
+dist/
+
+# IDE
+.recommenders/
+.apt_generated/
+.apt_generated_tests/
+.factorypath
+
+# Node modules (if applicable)
+node_modules/
+npm-debug.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Misc
+.gradle/
+.project
+.pyc

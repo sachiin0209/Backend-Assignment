@@ -1,0 +1,60 @@
+spring:
+  application:
+    name: finance-dashboard
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/finance_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          batch_size: 20
+          fetch_size: 50
+    show-sql: false
+  
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yml
+    enabled: true
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+logging:
+  level:
+    root: INFO
+    com.finance: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n"
+
+jwt:
+  secret: your-super-secret-key-change-this-in-production-at-least-256-bits
+  expiration: 86400000  # 24 hours in milliseconds
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+  api-docs:
+    path: /v3/api-docs
